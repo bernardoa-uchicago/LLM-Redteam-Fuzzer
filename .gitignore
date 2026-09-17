@@ -1,0 +1,8 @@
+.env
+/llm-project
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+package-lock.json
+results/

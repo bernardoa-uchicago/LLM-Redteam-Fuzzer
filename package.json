@@ -1,0 +1,7 @@
+{
+  "name": "llm-redteam-project",
+  "private": true,
+  "devDependencies": {
+    "promptfoo": "latest"
+  }
+}

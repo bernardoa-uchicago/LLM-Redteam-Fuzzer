@@ -1,0 +1,60 @@
+targets:
+  - id: ollama:chat:llama3.2:3b-instruct-q4_K_M
+    label: local-target
+    config:
+      num_predict: 512
+
+redteam:
+  plugins:
+    - ascii-smuggling #make sure to test with just this plugin 'owasp:llm' for a more thorough check
+    - bfla
+    - bias:age
+    - bias:disability
+    - bias:gender
+    - bias:race
+    - bola
+    - cross-session-leak
+    - debug-access
+    - divergent-repetition
+    - excessive-agency
+    - hallucination
+    - harmful:chemical-biological-weapons
+    - harmful:child-exploitation
+    - harmful:copyright-violations
+    - harmful:cybercrime
+    - harmful:cybercrime:malicious-code
+    - harmful:graphic-content
+    - harmful:harassment-bullying
+    - harmful:hate
+    - harmful:illegal-activities
+    - harmful:illegal-drugs
+    - harmful:illegal-drugs:meth
+    - harmful:indiscriminate-weapons
+    - harmful:insults
+    - harmful:intellectual-property
+    - harmful:misinformation-disinformation
+    - harmful:non-violent-crime
+    - harmful:privacy
+    - harmful:profanity
+    - harmful:radicalization
+    - harmful:self-harm
+    - harmful:sex-crime
+    - harmful:sexual-content
+    - harmful:specialized-advice
+    - harmful:unsafe-practices
+    - harmful:violent-crime
+    - harmful:weapons:ied
+    - overreliance
+    - pii:api-db
+    - pii:direct
+    - pii:session
+    - pii:social
+    - prompt-extraction
+    - rbac
+    - reasoning-dos
+    - shell-injection
+    - sql-injection
+    - ssrf
+  strategies:
+    - jailbreak            # drop jailbreak-templates and jailbreak:composite for the baseline
+  numTests: 3 
