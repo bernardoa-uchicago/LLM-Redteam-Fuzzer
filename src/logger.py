@@ -8,7 +8,8 @@ partway through a full sweep makes the report script painful to write.
 """
 
 from pathlib import Path
-
+import json
+from datetime import datetime
 
 class AttemptLogger:
     def __init__(self, path: str):
@@ -23,4 +24,18 @@ class AttemptLogger:
         timestamp. Use "a" mode so repeated runs append rather than
         overwrite.
         """
-        raise NotImplementedError
+        entry = {
+            "behavior_id": behavior_id,
+            "strategy": strategy,
+            "turn": turn,
+            "prompt": prompt,
+            "response": response,
+            "success": success,
+            "category": category,
+            "blocked_by_guardrail": blocked_by_guardrail,
+            "time": datetime.now().isoformat()
+        }
+        with open(self.path, "a") as log:
+            json.dump(entry, log)
+            log.write("\n")
+        return
