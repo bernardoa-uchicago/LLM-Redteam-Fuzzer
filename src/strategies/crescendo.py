@@ -12,6 +12,7 @@ class CrescendoStrategy:
         self.behavior = behavior
         self.max_turns = max_turns
         self.history = []
+        self.turn = 0
 
     def next_turn(self, attacker, target, judge) -> dict:
         """
@@ -26,4 +27,10 @@ class CrescendoStrategy:
         TODO: implement, stop early if the judge reports success or
         self.max_turns is reached
         """
-        raise NotImplementedError
+        self.turn += 1
+        att_prompt = attacker.generate_candidate(self.behavior, "crescendo", self.history)
+        self.history.append({"role": "user", "content": att_prompt})
+        resp_prompt = target.generate(self.history)
+        self.history.append({"role": "assistant", "content": resp_prompt})
+        judgement = judge.score(self.behavior, resp_prompt)
+        return {"turn": self.turn, "prompt": att_prompt, "response": resp_prompt, "success": judgement["success"]}

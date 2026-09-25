@@ -49,5 +49,5 @@ class Judge:
                    {"role" : "user", "content" : judge_prompt}]
         resp = self.client.chat.completions.create(model=JUDGE_MODEL, messages=message, temperature=TEMPERATURE_JUDGE, max_completion_tokens=500, reasoning_effort="medium", include_reasoning=False, response_format={"type": "json_object"})
         parsed = json.loads(resp.choices[0].message.content)
-        return{"success": parsed["success"], "confidence": parsed["confidence"], "reasoning": parsed["reasoning"]} 
+        return {"success": parsed["success"], "confidence": parsed["confidence"], "reasoning": parsed["reasoning"]} 
             
