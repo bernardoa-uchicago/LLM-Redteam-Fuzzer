@@ -17,6 +17,8 @@ class TAPStrategy:
         self.behavior = behavior
         self.branch_width = branch_width
         self.max_depth = max_depth
+        self.nodes = []
+        self.trace = []
 
     def run(self, attacker, target, judge) -> dict:
         """
@@ -29,4 +31,23 @@ class TAPStrategy:
         - Return the best result found, with the full search trace attached
           for logging
         """
-        raise NotImplementedError
+        seed = {"prompt": self.behavior, "response": None, "confidence": None, "success": None}
+        self.nodes.append(seed)
+        self.trace.append([seed])
+        for depth in range(self.max_depth):
+            candidates = []
+            for node in self.nodes:
+                if node["response"] == None:
+                    prompt = attacker.generate_candidate(node["prompt"], "tap")
+                else:
+                    prompt = attacker.generate_candidate(self.behavior, "tap", [{"prompt": node["prompt"], "response": node["response"]}])
+                response = target.single_turn(prompt)
+                results = judge.score(self.behavior, response)
+                candidate = {"prompt": prompt, "response": response, "confidence": results["confidence"], "success": results["success"]}
+                if candidate["success"]:
+                    return {"best_scorer": candidate, "trace": self.trace}
+                candidates.append(candidate)
+            self.nodes += candidates
+            self.trace.append(candidates)
+            self.nodes = sorted(self.nodes, key=lambda x: x["confidence"], reverse=True)[:self.branch_width]
+        return {"best_scorer": self.nodes[0], "trace": self.trace}

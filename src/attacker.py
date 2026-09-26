@@ -95,9 +95,9 @@ class AttackerModel:
         messages = [{"role": "system", "content": authorization + system_prompts[strategy]}]
         if (strategy == "crescendo" or strategy == "tap") and len(history) != 0:
             #Seen from the target's perspective, so response is the user's entry and prompt is what the target replies with
-            for prompt, response in history:
-                messages += [{"role": "user", "content" : response},
-                             {"role" : "assistant", "content" : prompt}]
+            for entry in history:
+                messages += [{"role": "user", "content" : entry["response"]},
+                             {"role" : "assistant", "content" : entry["prompt"]}]
 
         messages += [{"role" : "user", "content": user_prompt}]
         resp = self.client.chat.completions.create(model=ATTACKER_MODEL, messages=messages, temperature=TEMPERATURE_ATTACKER, max_completion_tokens=500, reasoning_effort="low", include_reasoning=False,)
