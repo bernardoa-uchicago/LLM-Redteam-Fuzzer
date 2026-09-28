@@ -34,7 +34,7 @@ class TAPStrategy:
         seed = {"prompt": self.behavior, "response": None, "confidence": None, "success": None}
         self.nodes.append(seed)
         self.trace.append([seed])
-        for depth in range(self.max_depth):
+        for _ in range(self.max_depth):
             candidates = []
             for node in self.nodes:
                 if node["response"] == None:
