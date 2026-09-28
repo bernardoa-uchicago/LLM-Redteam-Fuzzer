@@ -17,8 +17,8 @@ class AttemptLogger:
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
     def log(self, *, behavior_id: str, strategy: str, turn: int,
-             prompt: str, response: str, success: bool, category: str,
-             blocked_by_guardrail: bool = None):
+             prompt: str, response: str, success: bool,  confidence: str,
+             category: str, blocked_by_guardrail: bool = None, error: str=None):
         """
         TODO: append one JSON object per line with all fields above plus a
         timestamp. Use "a" mode so repeated runs append rather than
@@ -31,9 +31,11 @@ class AttemptLogger:
             "prompt": prompt,
             "response": response,
             "success": success,
+            "confidence": confidence,
             "category": category,
             "blocked_by_guardrail": blocked_by_guardrail,
-            "time": datetime.now().isoformat()
+            "time": datetime.now().isoformat(),
+            "error": error
         }
         with open(self.path, "a") as log:
             json.dump(entry, log)

@@ -33,4 +33,4 @@ class CrescendoStrategy:
         resp_prompt = target.generate(self.history)
         self.history.append({"role": "assistant", "content": resp_prompt})
         judgement = judge.score(self.behavior, resp_prompt)
-        return {"turn": self.turn, "prompt": att_prompt, "response": resp_prompt, "success": judgement["success"]}
+        return {"turn": self.turn, "prompt": att_prompt, "response": resp_prompt, "success": judgement["success"], "confidence": judgement["confidence"]}
