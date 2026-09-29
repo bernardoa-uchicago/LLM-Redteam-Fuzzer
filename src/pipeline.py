@@ -33,7 +33,7 @@ def run_behavior(behavior: dict, strategy: str, target, attacker, judge, logger,
     behavior_success = None
     match strategy:
         case "encoding":
-            prompt =encoding.build_prompt(behavior["goal"], **kwargs)
+            prompt =encoding.build_prompt(behavior["goal"], encoding=kwargs.get("encoding", "base64"))
             resp = target.single_turn(prompt)
             score = judge.score(behavior["goal"], resp)
             logger.log(behavior_id=behavior["id"], strategy=strategy, turn=1,
@@ -42,7 +42,7 @@ def run_behavior(behavior: dict, strategy: str, target, attacker, judge, logger,
                          blocked_by_guardrail=None)
             return score["success"]
         case "roleplay":
-            prompt =roleplay.build_prompt(behavior["goal"], **kwargs)
+            prompt =roleplay.build_prompt(behavior["goal"], persona=kwargs.get("persona", "novelist"))
             resp = target.single_turn(prompt)
             score = judge.score(behavior["goal"], resp)
             logger.log(behavior_id=behavior["id"], strategy=strategy, turn=1,

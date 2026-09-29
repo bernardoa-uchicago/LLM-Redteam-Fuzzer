@@ -16,7 +16,7 @@ TARGET_MODEL = "llama3.2:3b-instruct-q4_K_M"  # TODO: confirm exact tag after `o
 
 # --- Hosted models (via Groq API) ---
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-ATTACKER_MODEL = "openai/gpt-oss-20b"                      # generates/mutates attack prompts
+ATTACKER_MODEL = "qwen/qwen3.8-27b"                      # generates/mutates attack prompts
 JUDGE_MODEL = "openai/gpt-oss-120b"                          # scores whether an attempt succeeded
 PROMPT_GUARD_MODEL = "meta-llama/llama-prompt-guard-2-86m"    # input-side jailbreak detector
 SAFEGUARD_MODEL = "openai/gpt-oss-safeguard-20b"              # output-side policy classifier

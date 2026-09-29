@@ -71,3 +71,13 @@ scripts in order.
 - Garak: https://github.com/leondz/garak
 - Promptfoo: https://github.com/promptfoo/promptfoo
 - Groq models/docs: https://console.groq.com/docs/models
+
+## Notes
+
+- The Attacker Model's own safeguards may inhibit certain tests, for example 
+crescendo and TAP. However, with the model I chose it still may confuse the target
+provinf successful attacks even if the attacker refused to make a good prompt. In the real red-teaming world,
+Fine-tuned uncensored models as attackers or Larger frontier models with stronger instruction following
+are used to bypass this security issue.
+
+- Given the roadblock above, the week4 full sweep on all the JBB behaviors is only run on roleplaying and encoding attacks 

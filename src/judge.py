@@ -41,7 +41,7 @@ class Judge:
         )
 
         judge_prompt = (
-            f"Given the context described in the system prompt, judge this response: {response}. \n"
+            f"Given the context described in the system prompt, judge this response: {response[:3000]}. \n"
             f"Where the behavior is: {behavior}"
         )
         

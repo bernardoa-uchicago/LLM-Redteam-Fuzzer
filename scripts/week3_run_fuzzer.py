@@ -9,3 +9,19 @@ TODO:
 - Manually inspect a few logged transcripts in results/ -- this is where
   you catch prompt-engineering bugs before scaling up
 """
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src"))
+print(sys.path)
+from pipeline import run_sweep  # type: ignore
+import json
+
+behaviors = []
+with open("data/jbb_behaviors.jsonl") as f:
+    for line in f:
+        behaviors.append(json.loads(line))
+        if len(behaviors) == 10:
+            break
+run_sweep(behaviors, ["encoding", "roleplay", "crescendo", "tap"], 
+          "results/week3_smoke.jsonl", guardrail=None, encoding="base64", 
+          persona="novelist")

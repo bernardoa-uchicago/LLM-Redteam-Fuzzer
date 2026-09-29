@@ -40,7 +40,7 @@ class TAPStrategy:
                 if node["response"] == None:
                     prompt = attacker.generate_candidate(node["prompt"], "tap")
                 else:
-                    prompt = attacker.generate_candidate(self.behavior, "tap", [{"prompt": node["prompt"], "response": node["response"]}])
+                    prompt = attacker.generate_candidate(self.behavior, "tap", [{"role": "user", "content": node["prompt"]}, {"role": "assistant", "content": node["response"]}])
                 response = target.single_turn(prompt)
                 results = judge.score(self.behavior, response)
                 candidate = {"prompt": prompt, "response": response, "confidence": results["confidence"], "success": results["success"]}
@@ -49,5 +49,5 @@ class TAPStrategy:
                 candidates.append(candidate)
             self.nodes += candidates
             self.trace.append(candidates)
-            self.nodes = sorted(self.nodes, key=lambda x: x["confidence"], reverse=True)[:self.branch_width]
+            self.nodes = sorted(self.nodes, key=lambda x: x["confidence"] or 0, reverse=True)[:self.branch_width]
         return {"best_scorer": self.nodes[0], "trace": self.trace}
