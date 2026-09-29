@@ -14,6 +14,7 @@ from logger import AttemptLogger
 from strategies import encoding, roleplay, crescendo, tap
 from config import MAX_CRESCENDO_TURNS, TAP_BRANCH_WIDTH, TAP_MAX_DEPTH, TARGET_MODEL, JUDGE_MODEL, ATTACKER_MODEL
 from tqdm import tqdm
+import time
 
 def run_behavior(behavior: dict, strategy: str, target, attacker, judge, logger, guardrail=None, **kwargs):
     """
@@ -94,3 +95,4 @@ def run_sweep(behaviors: list, strategies: list, logger_path: str, guardrail=Non
                 logger.log(behavior_id=behavior["id"], strategy=strategy, turn=-1,
              prompt=behavior["goal"], response="-1", success="-1",  confidence=None,
              category=behavior["category"], blocked_by_guardrail=None, error=str(e))
+            time.sleep(1)
