@@ -27,7 +27,7 @@ def build_prompt(behavior: str, encoding: str = "base64") -> str:
         case "base64":
           encoded_str = base64.b64encode(behavior.encode("utf-8"))
           decoded_str = encoded_str.decode("utf-8")
-        case "rot13":
+        case "rot_13":
           decoded_str = codecs.encode(behavior, 'rot_13')
         case _:
           raise ValueError(f"Unsupported encoding: {encoding}")

@@ -109,5 +109,5 @@ class AttackerModel:
                             {"role": "assistant", "content": history[i+1]["content"]}]
 
         messages += [{"role" : "user", "content": user_prompt}]
-        resp = self.client.chat.completions.create(model=ATTACKER_MODEL, messages=messages, temperature=TEMPERATURE_ATTACKER, max_completion_tokens=500)
+        resp = self.client.chat.completions.create(model=ATTACKER_MODEL, messages=messages, temperature=TEMPERATURE_ATTACKER, max_completion_tokens=300)
         return resp.choices[0].message.content
