@@ -8,13 +8,14 @@ that's judge.py's job. Keep the two roles separate even though they may use
 the same underlying model.
 """
 
-from groq import Groq
-from config import GROQ_API_KEY, ATTACKER_MODEL, TEMPERATURE_ATTACKER
+import requests
+from config import LOCAL_ATTACKER_MODEL, TEMPERATURE_ATTACKER, OLLAMA_HOST
 
 
 class AttackerModel:
-    def __init__(self):
-        self.client = Groq(api_key=GROQ_API_KEY)
+    def __init__(self, model: str = LOCAL_ATTACKER_MODEL, host: str = OLLAMA_HOST):
+        self.model = model
+        self.host = host
 
     def generate_candidate(self, behavior: str, strategy: str, history: list[dict] = []) -> str:
         """
@@ -109,5 +110,10 @@ class AttackerModel:
                             {"role": "assistant", "content": history[i+1]["content"]}]
 
         messages += [{"role" : "user", "content": user_prompt}]
-        resp = self.client.chat.completions.create(model=ATTACKER_MODEL, messages=messages, temperature=TEMPERATURE_ATTACKER, max_completion_tokens=300)
-        return resp.choices[0].message.content
+        url = f"{self.host}/api/chat"
+        response = requests.post(url, json={"model": self.model, 
+                                        "messages": messages, 
+                                        "stream": False, 
+                                        "options": {"temperature": TEMPERATURE_ATTACKER}})
+        response.raise_for_status()
+        return response.json()["message"]["content"]

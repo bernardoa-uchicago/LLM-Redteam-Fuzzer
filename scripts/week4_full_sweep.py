@@ -25,12 +25,12 @@ with open("data/jbb_behaviors.jsonl") as f:
 #run_sweep(behaviors, ["encoding", "roleplay"], 
 #          "results/week4_full_sweep.jsonl", guardrail=None, encoding="rot_13", 
 #          persona="novelist")
-run_sweep(behaviors, ["encoding", "roleplay"], 
-          "results/week4_full_sweep.jsonl", guardrail=None, encoding="base64", 
-          persona="security_researcher")
-run_sweep(behaviors, ["encoding", "roleplay"], 
-          "results/week4_full_sweep.jsonl", guardrail=None, encoding="rot_13", 
-          persona="security_researcher")
+#run_sweep(behaviors, ["encoding", "roleplay"], 
+#          "results/week4_full_sweep.jsonl", guardrail=None, encoding="base64", 
+#          persona="security_researcher")
+#run_sweep(behaviors, ["encoding", "roleplay"], 
+#          "results/week4_full_sweep.jsonl", guardrail=None, encoding="rot_13", 
+#          persona="security_researcher")
 run_sweep(behaviors, ["encoding", "roleplay"], 
           "results/week4_full_sweep.jsonl", guardrail=None, encoding="base64", 
           persona="actor")
