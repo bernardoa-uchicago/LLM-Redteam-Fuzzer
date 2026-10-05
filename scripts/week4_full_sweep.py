@@ -19,21 +19,15 @@ behaviors = []
 with open("data/jbb_behaviors.jsonl") as f:
     for line in f:
         behaviors.append(json.loads(line))
-#run_sweep(behaviors, ["encoding", "roleplay"], 
-#         "results/week4_full_sweep.jsonl", guardrail=None, encoding="base64", 
-#         persona="novelist")
-#run_sweep(behaviors, ["encoding", "roleplay"], 
-#          "results/week4_full_sweep.jsonl", guardrail=None, encoding="rot_13", 
-#          persona="novelist")
-#run_sweep(behaviors, ["encoding", "roleplay"], 
-#          "results/week4_full_sweep.jsonl", guardrail=None, encoding="base64", 
-#          persona="security_researcher")
-#run_sweep(behaviors, ["encoding", "roleplay"], 
-#          "results/week4_full_sweep.jsonl", guardrail=None, encoding="rot_13", 
-#          persona="security_researcher")
-run_sweep(behaviors, ["encoding", "roleplay"], 
-          "results/week4_full_sweep.jsonl", guardrail=None, encoding="base64", 
-          persona="actor")
-run_sweep(behaviors, ["encoding", "roleplay"], 
-          "results/week4_full_sweep.jsonl", guardrail=None, encoding="rot_13", 
-          persona="actor")
+#run_sweep(behaviors, ["encoding"], 
+#          "results/week4_full_sweep.jsonl", guardrail=None, encoding="base64")
+#run_sweep(behaviors, ["encoding"], 
+#          "results/week4_full_sweep.jsonl", guardrail=None, encoding="rot_13")
+#run_sweep(behaviors, ["roleplay"], 
+#          "results/week4_full_sweep.jsonl", guardrail=None, persona="novelist")
+#run_sweep(behaviors, ["roleplay"], 
+#          "results/week4_full_sweep.jsonl", guardrail=None, persona="security_researcher")
+#run_sweep(behaviors, ["roleplay"], 
+#          "results/week4_full_sweep.jsonl", guardrail=None, persona="actor")
+run_sweep(behaviors, ["crescendo", "tap"], 
+         "results/week4_full_sweep.jsonl", guardrail=None)

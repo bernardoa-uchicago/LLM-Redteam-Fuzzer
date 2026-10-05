@@ -61,6 +61,7 @@ with open("results/week5_guardrail.jsonl", "a") as log:
                     blocks_output += 1
                 entry = {
                     **line,
+                    "type": "Harmful",
                     "input_blocked": input_score["blocked"],
                     "input_score": input_score["score"],
                     "output_blocked": output_score["blocked"],
@@ -101,6 +102,17 @@ with open("results/week5_guardrail.jsonl", "a") as log:
             if output_score["blocked"]:
                 false_positives_output += 1
 
+            entry = {
+                **line,
+                "type": "Benign",
+                "behavior_id": line["id"],
+                "goal": line["goal"],
+                "input_blocked": input_score["blocked"],
+                "input_score": input_score["score"],
+                "output_blocked": output_score["blocked"],
+                "output_category": output_score["category"]
+            }
+            json.dump(entry, log)
     summary = {
         "type": "summary",
         "total_attempts": total,

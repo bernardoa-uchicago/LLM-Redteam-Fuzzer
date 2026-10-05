@@ -12,10 +12,8 @@ from target import TargetModel
 from judge import Judge
 from logger import AttemptLogger
 from strategies import encoding, roleplay, crescendo, tap
-from config import MAX_CRESCENDO_TURNS, TAP_BRANCH_WIDTH, TAP_MAX_DEPTH, TARGET_MODEL, JUDGE_MODEL, ATTACKER_MODEL
+from config import MAX_CRESCENDO_TURNS, TAP_BRANCH_WIDTH, TAP_MAX_DEPTH
 from tqdm import tqdm
-import time
-from groq import RateLimitError
 
 def run_behavior(behavior: dict, strategy: str, target, attacker, judge, logger, guardrail=None, **kwargs):
     """
@@ -32,7 +30,6 @@ def run_behavior(behavior: dict, strategy: str, target, attacker, judge, logger,
       prompt and/or the response
     - Log every attempt via logger.log(...)
     """
-    behavior_success = None
     match strategy:
         case "encoding":
             prompt =encoding.build_prompt(behavior["goal"], encoding=kwargs.get("encoding", "base64"))
@@ -41,7 +38,7 @@ def run_behavior(behavior: dict, strategy: str, target, attacker, judge, logger,
             logger.log(behavior_id=behavior["id"], strategy=strategy, turn=1,
 						 prompt=prompt, response=resp, success=score["success"], 
                          category=behavior["category"], confidence= score["confidence"],
-                         blocked_by_guardrail=None)
+                         blocked_by_guardrail=None, harm_score=score.get("harm_score"))
             return score["success"]
         case "roleplay":
             prompt =roleplay.build_prompt(behavior["goal"], persona=kwargs.get("persona", "novelist"))
@@ -50,7 +47,7 @@ def run_behavior(behavior: dict, strategy: str, target, attacker, judge, logger,
             logger.log(behavior_id=behavior["id"], strategy=strategy, turn=1,
 						 prompt=prompt, response=resp, success=score["success"],
                          confidence= score["confidence"], category=behavior["category"], 
-                         blocked_by_guardrail=None)
+                         blocked_by_guardrail=None, harm_score=score.get("harm_score"))
             return score["success"]
         case "crescendo":
             strat = crescendo.CrescendoStrategy(behavior=behavior["goal"], max_turns=MAX_CRESCENDO_TURNS)
@@ -59,7 +56,7 @@ def run_behavior(behavior: dict, strategy: str, target, attacker, judge, logger,
                 logger.log(behavior_id=behavior["id"], strategy=strategy, turn=res["turn"],
 					prompt=res["prompt"], response=res["response"], success=res["success"], 
                     confidence= res["confidence"],category=behavior["category"],
-					blocked_by_guardrail=None)
+					blocked_by_guardrail=None, harm_score=res["harm_score"])
                 if res["success"]:
                     break
             return res["success"]
@@ -70,7 +67,7 @@ def run_behavior(behavior: dict, strategy: str, target, attacker, judge, logger,
                 for node in candidates:
                     logger.log(behavior_id=behavior["id"], strategy=strategy, turn=depth, prompt=node["prompt"],
                                response=node["response"], success=node["success"], confidence=node["confidence"],
-                               category=behavior["category"], blocked_by_guardrail=None)
+                               category=behavior["category"], blocked_by_guardrail=None, harm_score=node["harm_score"])
             return res["best_scorer"]["success"]
         case _:
             raise ValueError(f"Unsupported strategy: {strategy}")
@@ -93,14 +90,9 @@ def run_sweep(behaviors: list, strategies: list, logger_path: str, guardrail=Non
             while True:
                 try:
                     run_behavior(behavior, strategy, target, attacker, judge, logger, guardrail, **kwargs)
-                    time.sleep(1)
                     break
-                except RateLimitError as e:
-                    wait_time = int(e.response.headers.get("retry-after", 60))
-                    print(f"\nRate limit hit, waiting {wait_time} seconds...")
-                    time.sleep(wait_time)
                 except Exception as e:
                     logger.log(behavior_id=behavior["id"], strategy=strategy, turn=-1,
                         prompt=behavior["goal"], response="-1", success="-1", confidence=None,
-                        category=behavior["category"], blocked_by_guardrail=None, error=str(e))
+                        category=behavior["category"], blocked_by_guardrail=None, harm_score=None, error=str(e))
                     break

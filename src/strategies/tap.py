@@ -31,7 +31,7 @@ class TAPStrategy:
         - Return the best result found, with the full search trace attached
           for logging
         """
-        seed = {"prompt": self.behavior, "response": None, "confidence": None, "success": None}
+        seed = {"prompt": self.behavior, "response": None, "confidence": None, "success": None, "harm_score": None}
         self.nodes.append(seed)
         self.trace.append([seed])
         for _ in range(self.max_depth):
@@ -43,11 +43,11 @@ class TAPStrategy:
                     prompt = attacker.generate_candidate(self.behavior, "tap", [{"role": "user", "content": node["prompt"]}, {"role": "assistant", "content": node["response"]}])
                 response = target.single_turn(prompt)
                 results = judge.score(self.behavior, response)
-                candidate = {"prompt": prompt, "response": response, "confidence": results["confidence"], "success": results["success"]}
+                candidate = {"prompt": prompt, "response": response, "confidence": results["confidence"], "success": results["success"], "harm_score": results["harm_score"]}
                 if candidate["success"]:
                     return {"best_scorer": candidate, "trace": self.trace}
                 candidates.append(candidate)
             self.nodes += candidates
             self.trace.append(candidates)
-            self.nodes = sorted(self.nodes, key=lambda x: x["confidence"] or 0, reverse=True)[:self.branch_width]
+            self.nodes = sorted(self.nodes, key=lambda x: x["harm_score"] or 0, reverse=True)[:self.branch_width]
         return {"best_scorer": self.nodes[0], "trace": self.trace}
